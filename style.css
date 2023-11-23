@@ -1,0 +1,33 @@
+/* Basic styles */
+.navbar {
+        width: 20%;
+        float: left;
+        background-color: #4CAF50; /* Green background for navbar */
+    }
+    
+    .content {
+        width: 80%;
+        float: right;
+        background-color: #f2f2f2; /* Light grey background for content */
+    }
+    
+    .mobile-buttons {
+        display: none;
+    }
+    
+    /* Styles for mobile */
+    @media screen and (max-width: 600px) {
+        .navbar {
+            display: none;
+        }
+    
+        .content {
+            width: 100%;
+        }
+    
+        .mobile-buttons {
+            display: block;
+            /* Additional styling for buttons */
+        }
+    }
+    
