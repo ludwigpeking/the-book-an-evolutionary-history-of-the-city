@@ -8,21 +8,47 @@
   </head>
   <body>
     <div id="navbar" class="navbar">
-      <a href="#" class="nav-link" data-chapter="0">Chapter 00</a>
-      <a href="#" class="nav-link" data-chapter="1">Chapter 01</a>
+      <button id="homePage">Qian</button>
+      <button id="tocButton">Table of Contents</button>
+      <button id="prevButton"><</button>
+      <button id="nextButton">></button>
+    </div>
+    <div id="left-column" class="left-column">
+      <h2>Chapters</h2>
+      <div id="links-container">
+        <!-- Links will be loaded here -->
+      </div>
+
       <!-- More links up to Chapter 39 -->
     </div>
 
-    <div id="mobileButtons" class="mobile-buttons">
-      <!-- Buttons for mobile -->
-      <button id="tocButton">Table of Contents</button>
-      <button id="prevButton">Previous Chapter</button>
-      <button id="nextButton">Next Chapter</button>
-    </div>
     <div id="content" class="content">
       <!-- Chapter content goes here -->
       <p>Welcome to the book! Select a chapter from the navigation bar.</p>
     </div>
     <script src="script.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("links.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("links-container").innerHTML = data;
+            // After the links are added, set up event listeners
+            document
+              .querySelectorAll("#links-container .nav-link")
+              .forEach((link) => {
+                link.addEventListener("click", function (event) {
+                  event.preventDefault();
+                  const chapterNumber = parseInt(
+                    this.getAttribute("data-chapter"),
+                    10
+                  );
+                  loadChapter(chapterNumber);
+                });
+              });
+          })
+          .catch((error) => console.error("Error loading links:", error));
+      });
+    </script>
   </body>
 </html>
