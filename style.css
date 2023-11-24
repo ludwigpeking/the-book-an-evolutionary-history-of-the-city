@@ -58,6 +58,18 @@ body {
   transition: all 0.3s ease;
 }
 
+.button-style {
+  background-color: transparent; /* or use the background color of the container */
+  color: #ccc; /* or any color you prefer for the text */
+  border: 2px solid #ccc; /* or any color for the border */
+  border-radius: 10px; /* adjust for desired roundness */
+  padding: 5px 10px;
+  font-size: 16px; /* adjust as needed */
+  opacity: 0.8; /* adjust for desired transparency */
+  transition: all 0.3s ease;
+  /* Add other button-like styling as needed */
+}
+
 .navbar button:hover {
   opacity: 1; /* Full opacity on hover */
 }
