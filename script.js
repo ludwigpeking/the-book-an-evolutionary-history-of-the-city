@@ -17,8 +17,12 @@ document.getElementById("prevButton").addEventListener("click", function () {
 
 // Next Chapter Button
 document.getElementById("nextButton").addEventListener("click", function () {
-  currentChapter += 1;
-  loadChapter(currentChapter);
+  if (currentChapter < 38) {
+    currentChapter += 1;
+    loadChapter(currentChapter);
+  } else {
+    console.log("Already at the last chapter");
+  }
 });
 
 function loadChapter(chapterNumber) {
@@ -48,25 +52,16 @@ function loadChapter(chapterNumber) {
 function loadLinksIntoContent() {
   fetch("links.html")
     .then((response) => response.text())
-    .then((data) => {
-      // Append the links to the content already loaded from 00.html
-      document.getElementById("content").innerHTML += data;
+    .then((linksData) => {
+      const contentDiv = document.getElementById("content");
+      contentDiv.innerHTML += linksData;
 
-      // Set up event listeners for each link
-      document.querySelectorAll("#content .nav-link").forEach((link) => {
-        link.addEventListener("click", function (event) {
-          event.preventDefault();
-          const chapterNumber = parseInt(this.getAttribute("data-chapter"), 10);
-          loadChapter(chapterNumber);
-        });
-      });
+      return fetch("intro.html"); // Start fetching intro.html after links.html is loaded
     })
-    .catch((error) => console.error("Error loading links:", error));
-  fetch("intro.html")
     .then((response) => response.text())
-    .then((data) => {
-      // Append the links to the content already loaded from 00.html
-      document.getElementById("content").innerHTML += data;
+    .then((introData) => {
+      const contentDiv = document.getElementById("content");
+      contentDiv.innerHTML += introData;
 
       // Set up event listeners for each link
       document.querySelectorAll("#content .nav-link").forEach((link) => {
@@ -77,7 +72,7 @@ function loadLinksIntoContent() {
         });
       });
     })
-    .catch((error) => console.error("Error loading links:", error));
+    .catch((error) => console.error("Error loading content:", error));
 }
 
 // Example usage: Load chapter 00 initially
@@ -90,4 +85,41 @@ document.querySelectorAll(".nav-link").forEach((link) => {
     const chapterNumber = parseInt(this.getAttribute("data-chapter"), 10);
     loadChapter(chapterNumber);
   });
+});
+
+document.querySelectorAll(".left-column, .content").forEach((div) => {
+  div.addEventListener(
+    "wheel",
+    function (e) {
+      e.preventDefault(); // Prevent default scroll behavior
+
+      var scrollAmount = e.deltaY * 0.6; // Adjust the 0.1 value to control the scroll speed
+      this.scrollBy(0, scrollAmount);
+    },
+    { passive: false }
+  );
+});
+
+document.addEventListener("keydown", function (event) {
+  // Check if the left arrow key (key code 37) was pressed
+  if (event.keyCode === 37) {
+    // Trigger the click event for the Previous Chapter button
+    if (currentChapter > 0) {
+      currentChapter -= 1;
+      loadChapter(currentChapter);
+    } else {
+      console.log("Already at the first chapter");
+    }
+  }
+
+  // Check if the right arrow key (key code 39) was pressed
+  if (event.keyCode === 39) {
+    // Trigger the click event for the Next Chapter button
+    if (currentChapter < 38) {
+      currentChapter += 1;
+      loadChapter(currentChapter);
+    } else {
+      console.log("Already at the last chapter");
+    }
+  }
 });
