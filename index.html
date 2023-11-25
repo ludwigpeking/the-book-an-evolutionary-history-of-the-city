@@ -33,28 +33,5 @@
       <p>Welcome to the book! Select a chapter from the navigation bar.</p>
     </div>
     <script src="script.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        fetch("links.html")
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById("links-container").innerHTML = data;
-            // After the links are added, set up event listeners
-            document
-              .querySelectorAll("#links-container .nav-link")
-              .forEach((link) => {
-                link.addEventListener("click", function (event) {
-                  event.preventDefault();
-                  const chapterNumber = parseInt(
-                    this.getAttribute("data-chapter"),
-                    10
-                  );
-                  loadChapter(chapterNumber);
-                });
-              });
-          })
-          .catch((error) => console.error("Error loading links:", error));
-      });
-    </script>
   </body>
 </html>
