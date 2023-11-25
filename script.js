@@ -7,7 +7,7 @@ function getChapterFromURL() {
 }
 
 document.getElementById("tocButton").addEventListener("click", function () {
-  currentChapter = 0; // Reset to the first chapter or Table of Contents
+  currentChapter = 0;
   loadChapter(currentChapter);
 });
 
@@ -52,21 +52,34 @@ function loadChapter(chapterNumber) {
 }
 
 function loadLinksIntoContent() {
+  console.log("Loading links into content");
   fetch("links.html")
     .then((response) => response.text())
     .then((linksData) => {
       const linksContainer = document.getElementById("links-container");
-      linksContainer.innerHTML += linksData;
-
-      return fetch("intro.html"); // Start fetching intro.html after links.html is loaded
+      linksContainer.innerHTML = linksData; // Load links into links-container
+      const contentElement = document.getElementById("content");
+      contentElement.innerHTML += linksData;
+      return fetch("intro.html"); // Fetch intro.html
     })
     .then((response) => response.text())
     .then((introData) => {
       const contentDiv = document.getElementById("content");
-      contentDiv.innerHTML += introData;
+      contentDiv.innerHTML += introData; // Append intro.html to content
     })
     .catch((error) => console.error("Error loading content:", error));
 }
+document.getElementById("content").addEventListener("click", function (event) {
+  if (event.target && event.target.matches(".nav-link")) {
+    event.preventDefault();
+    const chapterNumber = parseInt(
+      event.target.getAttribute("data-chapter"),
+      10
+    );
+    loadChapter(chapterNumber);
+  }
+});
+
 document
   .getElementById("links-container")
   .addEventListener("click", function (event) {
@@ -85,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Example usage: Load chapter 00 initially
-loadChapter(0);
+// loadChapter(0);
 
 document.querySelectorAll(".left-column, .content").forEach((div) => {
   div.addEventListener(

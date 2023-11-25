@@ -83,9 +83,7 @@ body {
   .content {
     width: 100%;
   }
-  .h1 {
-    font-size: 80%;
-  }
+
   .navbar {
     display: block;
     /* Additional styling for buttons */
@@ -137,6 +135,11 @@ footer {
   position: relative;
   background: none;
   max-width: 50vh;
+}
+@media screen and (max-width: 800px) {
+  .content h1 {
+    font-size: 120%;
+  }
 }
 h2 {
   font-size: 120%;
