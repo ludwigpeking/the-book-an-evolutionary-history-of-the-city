@@ -290,8 +290,29 @@ figcaption {
 }
 
 .middle-diagram {
-  display: flex;
-  margin: 10px;
+  margin: 5px;
 
-  width: 50%;
+  width: 60%;
+}
+.legend {
+  list-style: none;
+  padding: 0;
+}
+.legend li {
+  margin-bottom: 10px;
+}
+.legend span {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+.blue {
+  background-color: blue;
+}
+.red {
+  background-color: red;
+}
+.magenta {
+  background-color: magenta;
 }
