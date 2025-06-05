@@ -316,3 +316,6 @@ figcaption {
 .magenta {
   background-color: magenta;
 }
+
+table { border-collapse: collapse; }
+td { border: 1px solid white; }
