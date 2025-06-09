@@ -1,23 +1,53 @@
 const fs = require("fs");
 const path = require("path");
+const { promisify } = require('util');
 
-const chaptersDir = path.join(__dirname, "chapters_cn");
-const chapterFiles = fs
-  .readdirSync(chaptersDir)
-  .filter((file) => file.endsWith(".html"))
-  .sort();
+const readFileAsync = promisify(fs.readFile);
+const writeFileAsync = promisify(fs.writeFile);
 
-const titles = {};
-const resultArray = [];
+// Memoization cache for titles
+const titleCache = new Map();
 
-// Extract titles from each chapter file
-chapterFiles.forEach((file) => {
+async function extractTitle(html) {
+  const h1Match = html.match(/<h1[^>]*>(.*?)<\/h1>/i);
+  if (h1Match && h1Match[1]) {
+    return h1Match[1].replace(/<\/?[^>]+(>|$)/g, '').trim();
+  }
+  return null;
+}
+
+async function generateTableOfContents(language = 'en') {
+  console.time('toc-generation');
+  const chaptersDir = path.join(__dirname, language === 'en' ? 'chapters' : 'chapters_cn');
+  
   try {
-    const chapterNumber = parseInt(file.split(".")[0]);
-    const content = fs.readFileSync(path.join(chaptersDir, file), "utf8");
+    // Read directory and sort chapter files
+    console.time('read-dir');
+    const files = fs.readdirSync(chaptersDir)
+      .filter(file => /^\d+\.html$/.test(file))
+      .sort((a, b) => parseInt(a) - parseInt(b));
+    console.timeEnd('read-dir');
 
-    // Try different patterns to find the title
-    let title = null;
+    // Read all files in parallel
+    console.time('read-files');
+    const chapters = await Promise.all(
+      files.map(async file => {
+        const chapterNum = parseInt(file);
+        
+        // Check cache first
+        if (titleCache.has(file)) {
+          return titleCache.get(file);
+        }
+
+        try {
+          const content = await readFileAsync(path.join(chaptersDir, file), 'utf8');
+          const title = await extractTitle(content);
+          
+          const chapterInfo = {
+            number: chapterNum,
+            title: title || `Chapter ${chapterNum}`,
+            id: `chapter-${chapterNum}`
+          };
 
     // Try to find h1 tag first (more comprehensive pattern)
     let match = content.match(/<h1[^>]*>(.*?)<\/h1>/i);

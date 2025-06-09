@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voronoi Image Mosaic</title>
+    <script src="p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-delaunay@6"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .controls {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .info {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: white;
+        border-radius: 5px;
+        max-width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Voronoi Image Mosaic</h1>
+      <div class="controls">
+        <p>Press 'S' to save image | Press 'R' to regenerate</p>
+      </div>
+      <div id="sketch-container"></div>
+      <div class="info">
+        <h3>Instructions:</h3>
+        <ul>
+          <li>Make sure your images folder contains 001.jpg through 102.jpg</li>
+          <li>Run a local server (see instructions below)</li>
+          <li>
+            The sketch will create a Voronoi diagram with random image clips
+          </li>
+          <li>Press 'S' to save the current image</li>
+          <li>Press 'R' to generate a new random arrangement</li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="sketch.js"></script>
+  </body>
+</html>

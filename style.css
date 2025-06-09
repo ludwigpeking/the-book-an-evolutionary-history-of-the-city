@@ -90,8 +90,7 @@ body {
   }
 }
 
-@media only screen and (min-device-pixel-ratio: 1),
-  only screen and (min-resolution: 192dpi) {
+@media only screen and (min-device-pixel-ratio: 1), only screen and (min-resolution: 192dpi) {
   /* High-density screen (e.g., Retina) styles */
 }
 
@@ -157,7 +156,6 @@ pre,
 li {
   padding: 0;
   background: none;
-  line-height: 24px;
 }
 .column,
 .home,
@@ -317,5 +315,40 @@ figcaption {
   background-color: magenta;
 }
 
-table { border-collapse: collapse; }
-td { border: 1px solid white; }
+table {
+  border-collapse: collapse;
+}
+td {
+  border: 1px solid white;
+}
+/* Add specific style for nav-links in the links container */
+#links-container .nav-link {
+  padding-left: 0;
+  display: block;
+  width: 100%;
+  margin-bottom: 0.8em;  /* Reduced spacing for sidebar links */
+  line-height: 1.4;  /* Slightly tighter line height for nav links */
+}
+
+/* Style links within chapters */
+.content a {
+  margin: 0.4em 0;  /* Add moderate spacing around in-chapter links */
+  line-height: 1.6;  /* Keep same line height as paragraphs for in-chapter links */
+  display: inline-block;
+}
+
+#links-container br {
+  display: none;
+}
+
+/* Keep paragraph spacing consistent */
+p {
+  margin-bottom: 1.2em;  /* Slightly reduced from 1.5em for better balance */
+  margin-top: 1.2em;
+  line-height: 1.6;
+}
+
+pre, ul, ol {
+  margin-bottom: 1.2em;
+  margin-top: 1.2em;
+}

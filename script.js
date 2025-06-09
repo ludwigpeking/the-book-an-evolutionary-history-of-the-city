@@ -46,22 +46,16 @@ document.getElementById("nextButton").addEventListener("click", function () {
 
 // Function to update sidebar links based on current language
 function updateSidebarLinks() {
-  // Determine which link generation function to use based on language
-  const generateLinksFunction =
-    currentLanguage === "en" ? generateEnglishLinks : generateChineseLinks;
-
-  // Dynamically generate links for the current language
-  generateLinksFunction()
-    .then((linksData) => {
+  const tocFile = `toc${currentLanguage === "cn" ? "_cn" : ""}.html`;
+  
+  fetch(tocFile)
+    .then(response => response.text())
+    .then(tocData => {
       const linksContainer = document.getElementById("links-container");
-      linksContainer.innerHTML = linksData;
-
-      // Set up event listeners for the links
+      linksContainer.innerHTML = tocData;
       setupNavLinksEventListeners();
     })
-    .catch((error) =>
-      console.error(`Error loading ${currentLanguage} sidebar links:`, error)
-    );
+    .catch(error => console.error(`Error loading ${currentLanguage} TOC:`, error));
 }
 
 // Language Button
@@ -83,22 +77,29 @@ function loadChapter(chapterNumber) {
   const contentDiv = document.getElementById("content");
   const formattedChapterNumber = chapterNumber.toString().padStart(2, "0");
 
-  // Determine which folder to load from based on language
+  // Determine which files to load based on language
   const chapterFolder = currentLanguage === "en" ? "chapters" : "chapters_cn";
   const chapterFile = `${chapterFolder}/${formattedChapterNumber}.html`;
+  const tocFile = `toc${currentLanguage === "cn" ? "_cn" : ""}.html`;
 
-  fetch(chapterFile)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+  // Load both chapter and TOC in parallel
+  Promise.all([
+    fetch(chapterFile),
+    fetch(tocFile)
+  ])
+    .then(([chapterResponse, tocResponse]) => {
+      if (!chapterResponse.ok || !tocResponse.ok) {
+        throw new Error(`HTTP error! Status: ${chapterResponse.status}`);
       }
-      return response.text();
+      return Promise.all([chapterResponse.text(), tocResponse.text()]);
     })
-    .then((data) => {
-      contentDiv.innerHTML = data;
+    .then(([chapterData, tocData]) => {
+      contentDiv.innerHTML = chapterData;
       contentDiv.scrollTop = 0;
       if (chapterNumber === 0) {
-        loadLinksIntoContent();
+        const linksContainer = document.getElementById("links-container");
+        linksContainer.innerHTML = tocData;
+        contentDiv.innerHTML += tocData;
       }
       history.pushState(
         {},
@@ -120,24 +121,20 @@ function loadChapter(chapterNumber) {
 function loadLinksIntoContent() {
   console.log("Loading links into content");
   const introFile = currentLanguage === "en" ? "intro.html" : "intro_cn.html";
+  const tocFile = `toc${currentLanguage === "cn" ? "_cn" : ""}.html`;
 
-  // Determine which link generation function to use based on language
-  const generateLinksFunction =
-    currentLanguage === "en" ? generateEnglishLinks : generateChineseLinks;
-
-  // Dynamically generate links for the current language
-  generateLinksFunction()
-    .then((linksData) => {
+  Promise.all([
+    fetch(tocFile),
+    fetch(introFile)
+  ])
+    .then(([tocResponse, introResponse]) => 
+      Promise.all([tocResponse.text(), introResponse.text()])
+    )
+    .then(([tocData, introData]) => {
       const linksContainer = document.getElementById("links-container");
-      linksContainer.innerHTML = linksData;
+      linksContainer.innerHTML = tocData;
       const contentElement = document.getElementById("content");
-      contentElement.innerHTML += linksData;
-      return fetch(introFile);
-    })
-    .then((response) => response.text())
-    .then((introData) => {
-      const contentDiv = document.getElementById("content");
-      contentDiv.innerHTML += introData; // Append intro.html to content
+      contentElement.innerHTML += tocData + introData;
     })
     .catch((error) =>
       console.error(`Error loading ${currentLanguage} content:`, error)
