@@ -326,14 +326,14 @@ td {
   padding-left: 0;
   display: block;
   width: 100%;
-  margin-bottom: 0.8em;  /* Reduced spacing for sidebar links */
-  line-height: 1.4;  /* Slightly tighter line height for nav links */
+  margin-bottom: 0.8em; /* Reduced spacing for sidebar links */
+  line-height: 1.4; /* Slightly tighter line height for nav links */
 }
 
 /* Style links within chapters */
 .content a {
-  margin: 0.4em 0;  /* Add moderate spacing around in-chapter links */
-  line-height: 1.6;  /* Keep same line height as paragraphs for in-chapter links */
+  margin: 0.4em 0; /* Add moderate spacing around in-chapter links */
+  line-height: 1.6; /* Keep same line height as paragraphs for in-chapter links */
   display: inline-block;
 }
 
@@ -343,12 +343,14 @@ td {
 
 /* Keep paragraph spacing consistent */
 p {
-  margin-bottom: 1.2em;  /* Slightly reduced from 1.5em for better balance */
+  margin-bottom: 1.2em; /* Slightly reduced from 1.5em for better balance */
   margin-top: 1.2em;
   line-height: 1.6;
 }
 
-pre, ul, ol {
+pre,
+ul,
+ol {
   margin-bottom: 1.2em;
   margin-top: 1.2em;
 }

@@ -17,27 +17,17 @@ async function generateLinks(language) {
         continue;
       }
 
-      const html = await response.text();
-
-      // Create a temporary element to parse the HTML
+      const html = await response.text(); // Create a temporary element to parse the HTML
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = html;
 
-      // Extract the title from h1 tag, if available
-      let title = "";
+      // Just extract the H1 text for all chapters
       const h1Tag = tempDiv.querySelector("h1");
-
-      if (h1Tag) {
-        title = h1Tag.textContent.trim();
-      } else {
-        // If no h1 tag, look for the first paragraph that might contain the title
-        const firstP = tempDiv.querySelector("p");
-        if (firstP) {
-          title = firstP.textContent.trim();
-        } else {
-          title = `${chapterNumber}. ${defaultTitlePrefix}`; // Default title if nothing found
-        }
+      if (!h1Tag) {
+        console.log(`No H1 tag found in chapter ${chapterNumber}`);
+        continue;
       }
+      const title = h1Tag.textContent.trim();
 
       // Create the link HTML
       linksHTML += `<a href="#" class="nav-link" data-chapter="${i}">${title}</a><br /><br />\n`;

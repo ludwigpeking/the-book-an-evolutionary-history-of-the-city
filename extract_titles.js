@@ -5,8 +5,9 @@ const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 
-// Memoization cache for titles
-const titleCache = new Map();
+async function generateLinks(language = 'en') {
+  const chaptersDir = path.join(__dirname, language === 'en' ? 'chapters' : 'chapters_cn');
+  let linksHTML = '<!-- filepath: ' + path.join(__dirname, language === 'en' ? 'links.html' : 'links_cn.html') + ' -->\n';
 
 async function extractTitle(html) {
   const h1Match = html.match(/<h1[^>]*>(.*?)<\/h1>/i);

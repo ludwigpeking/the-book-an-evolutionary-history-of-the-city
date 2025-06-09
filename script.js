@@ -47,29 +47,27 @@ document.getElementById("nextButton").addEventListener("click", function () {
 // Function to update sidebar links based on current language
 function updateSidebarLinks() {
   const tocFile = `toc${currentLanguage === "cn" ? "_cn" : ""}.html`;
-  
+
   fetch(tocFile)
-    .then(response => response.text())
-    .then(tocData => {
+    .then((response) => response.text())
+    .then((tocData) => {
       const linksContainer = document.getElementById("links-container");
       linksContainer.innerHTML = tocData;
       setupNavLinksEventListeners();
     })
-    .catch(error => console.error(`Error loading ${currentLanguage} TOC:`, error));
+    .catch((error) => console.error(`Error loading ${currentLanguage} TOC:`, error));
 }
 
 // Language Button
-document
-  .getElementById("languageButton")
-  .addEventListener("click", function () {
-    // Toggle language
-    currentLanguage = currentLanguage === "en" ? "cn" : "en";
-    updateLanguageButton();
-    // Update the sidebar links to match the new language
-    updateSidebarLinks();
-    // Load the current chapter in the new language
-    loadChapter(currentChapter);
-  });
+document.getElementById("languageButton").addEventListener("click", function () {
+  // Toggle language
+  currentLanguage = currentLanguage === "en" ? "cn" : "en";
+  updateLanguageButton();
+  // Update the sidebar links to match the new language
+  updateSidebarLinks();
+  // Load the current chapter in the new language
+  loadChapter(currentChapter);
+});
 
 function loadChapter(chapterNumber) {
   console.log("Loading chapter", chapterNumber, "in", currentLanguage);
@@ -83,10 +81,7 @@ function loadChapter(chapterNumber) {
   const tocFile = `toc${currentLanguage === "cn" ? "_cn" : ""}.html`;
 
   // Load both chapter and TOC in parallel
-  Promise.all([
-    fetch(chapterFile),
-    fetch(tocFile)
-  ])
+  Promise.all([fetch(chapterFile), fetch(tocFile)])
     .then(([chapterResponse, tocResponse]) => {
       if (!chapterResponse.ok || !tocResponse.ok) {
         throw new Error(`HTTP error! Status: ${chapterResponse.status}`);
@@ -101,11 +96,7 @@ function loadChapter(chapterNumber) {
         linksContainer.innerHTML = tocData;
         contentDiv.innerHTML += tocData;
       }
-      history.pushState(
-        {},
-        "",
-        `?chapter=${chapterNumber}&lang=${currentLanguage}`
-      );
+      history.pushState({}, "", `?chapter=${chapterNumber}&lang=${currentLanguage}`);
     })
     .catch((error) => {
       console.error("Error loading chapter:", error);
@@ -123,31 +114,21 @@ function loadLinksIntoContent() {
   const introFile = currentLanguage === "en" ? "intro.html" : "intro_cn.html";
   const tocFile = `toc${currentLanguage === "cn" ? "_cn" : ""}.html`;
 
-  Promise.all([
-    fetch(tocFile),
-    fetch(introFile)
-  ])
-    .then(([tocResponse, introResponse]) => 
-      Promise.all([tocResponse.text(), introResponse.text()])
-    )
+  Promise.all([fetch(tocFile), fetch(introFile)])
+    .then(([tocResponse, introResponse]) => Promise.all([tocResponse.text(), introResponse.text()]))
     .then(([tocData, introData]) => {
       const linksContainer = document.getElementById("links-container");
       linksContainer.innerHTML = tocData;
       const contentElement = document.getElementById("content");
       contentElement.innerHTML += tocData + introData;
     })
-    .catch((error) =>
-      console.error(`Error loading ${currentLanguage} content:`, error)
-    );
+    .catch((error) => console.error(`Error loading ${currentLanguage} content:`, error));
 }
 
 document.getElementById("content").addEventListener("click", function (event) {
   if (event.target && event.target.matches(".nav-link")) {
     event.preventDefault();
-    const chapterNumber = parseInt(
-      event.target.getAttribute("data-chapter"),
-      10
-    );
+    const chapterNumber = parseInt(event.target.getAttribute("data-chapter"), 10);
     loadChapter(chapterNumber);
   }
 });
@@ -163,18 +144,13 @@ function setupNavLinksEventListeners() {
   });
 }
 
-document
-  .getElementById("links-container")
-  .addEventListener("click", function (event) {
-    if (event.target && event.target.matches(".nav-link")) {
-      event.preventDefault();
-      const chapterNumber = parseInt(
-        event.target.getAttribute("data-chapter"),
-        10
-      );
-      loadChapter(chapterNumber);
-    }
-  });
+document.getElementById("links-container").addEventListener("click", function (event) {
+  if (event.target && event.target.matches(".nav-link")) {
+    event.preventDefault();
+    const chapterNumber = parseInt(event.target.getAttribute("data-chapter"), 10);
+    loadChapter(chapterNumber);
+  }
+});
 document.addEventListener("DOMContentLoaded", function () {
   const initialChapter = getChapterFromURL();
   updateLanguageButton();
