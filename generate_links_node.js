@@ -1,4 +1,4 @@
-console.log('Script is starting...');
+console.log("Script is starting...");
 
 const fs = require("fs");
 const path = require("path");
@@ -15,7 +15,7 @@ function generateLinks(language) {
   for (let i = 0; i <= 38; i++) {
     const chapterNumber = i.toString().padStart(2, "0");
     const chapterPath = path.join(baseDir, chapterFolder, `${chapterNumber}.html`);
-    
+
     if (!fs.existsSync(chapterPath)) {
       console.error(`File not found: ${chapterPath}`);
       continue;
@@ -24,11 +24,11 @@ function generateLinks(language) {
     try {
       const content = fs.readFileSync(chapterPath, "utf8");
       const match = content.match(/<h1[^>]*>(.*?)<\/h1>/is);
-      
+
       if (match && match[1]) {
         const title = match[1].trim();
         const bracketMatch = title.match(/\[(.*?)\]/);
-        
+
         if (bracketMatch) {
           const extractedTitle = bracketMatch[1].trim();
           linksHTML += `<a href="#" class="nav-link" data-chapter="${i}">${extractedTitle}</a><br /><br />\n`;
@@ -47,7 +47,7 @@ function generateLinks(language) {
 
   const outputFile = language === "en" ? "links.html" : "links_cn.html";
   const outputPath = path.join(baseDir, outputFile);
-  
+
   try {
     fs.writeFileSync(outputPath, linksHTML, "utf8");
     console.log(`Successfully generated ${outputPath}`);

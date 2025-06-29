@@ -1,13 +1,13 @@
 let images = [];
 let sites = [];
-let numSites = 100;
-let canvasWidth = 1485;
+let numSites = 200;
+let canvasWidth = 3000;
 let canvasHeight = 2100;
 let currentSeed = 2; // Default seed
 let voronoi; // D3 Voronoi diagram
 
 function preload() {
-  for (let i = 1; i <= 102; i++) {
+  for (let i = 1; i <= 108; i++) {
     let filename = "images/" + nf(i, 3) + ".jpg";
     images.push(loadImage(filename));
   }
@@ -98,12 +98,8 @@ function renderVoronoiCPU() {
       let finalY = rotatedY / closestSite.scale + closestSite.offsetY;
 
       // Wrap coordinates to create seamless tiling
-      let imgX =
-        ((finalX % closestSite.img.width) + closestSite.img.width) %
-        closestSite.img.width;
-      let imgY =
-        ((finalY % closestSite.img.height) + closestSite.img.height) %
-        closestSite.img.height; // Sample color from image
+      let imgX = ((finalX % closestSite.img.width) + closestSite.img.width) % closestSite.img.width;
+      let imgY = ((finalY % closestSite.img.height) + closestSite.img.height) % closestSite.img.height; // Sample color from image
       let c = closestSite.img.get(floor(imgX), floor(imgY));
 
       // Create tint color based on site properties (converting to 0-255 range)
